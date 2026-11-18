@@ -1,0 +1,4 @@
+tqdm
+rich
+loguru
+pygame
