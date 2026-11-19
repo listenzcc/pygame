@@ -2,3 +2,5 @@ tqdm
 rich
 loguru
 pygame
+rquests
+Pillow
