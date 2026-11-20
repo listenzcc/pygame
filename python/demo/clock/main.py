@@ -26,6 +26,9 @@ import pygame as pg
 from PIL import Image
 from loguru import logger
 
+from heavy_load_job import HeavyWorkLoad
+from threading import Thread
+
 # %%
 WIDTH = 1440
 HEIGHT = 900
@@ -38,9 +41,9 @@ pg.init()
 
 CLOCK = pg.time.Clock()
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT))
-
-# %%
 FONTs = {sz: pg.font.Font(font_name, sz) for sz in sizes}
+
+HWL = HeavyWorkLoad()
 
 
 # %% ---- 2026-11-18 ------------------------
@@ -122,6 +125,14 @@ def flip():
     return
 
 
+def handle_key_k():
+    '''Press the key "k" to start the 10 seconds thread.'''
+    print('handle_key_k')
+    t = Thread(target=HWL.work, )
+    t.start()
+    return
+
+
 def check_events():
     for evt in pg.event.get():
         if evt.type == pg.QUIT:
@@ -133,8 +144,11 @@ def check_events():
         elif evt.type == pg.TEXTINPUT:
             ctrl.text = evt.text
 
-        elif evt.type in (pg.KEYDOWN, pg.KEYUP):
+        elif evt.type in [pg.KEYDOWN, ]:
             ctrl.key = evt.unicode
+
+            if ctrl.key == 'k':
+                handle_key_k()
 
         else:
             pass
@@ -149,7 +163,11 @@ def main():
             check_events()
             flip()
     except Exception as err:
+        import traceback
+        traceback.print_exc()
         print(err)
+    finally:
+        print('main done.')
 
 
 # %% ---- 2026-11-18 ------------------------
