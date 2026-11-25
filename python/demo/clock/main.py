@@ -101,18 +101,27 @@ def flip():
         surf.blit(BACKGROUND_IMG, (0, 0))
 
     # center timing text
+    # Clock
     text = FONTs[32].render(f'{time.ctime()}', True, 'white')
     rect = text.get_rect()
     rect.center = (surf.get_width()//2, surf.get_height()//2)
     surf.blit(text, rect)
 
+    # Manual
+    text = FONTs[32].render('Press k to start logging thread', True, 'yellow')
+    rect = text.get_rect()
+    rect.center = (surf.get_width()//2, surf.get_height()//4*3)
+    surf.blit(text, rect)
+
     # bottom text
+    # Mouse and keyboard input
     text = FONTs[24].render(ctrl.render_txt(), True, 'white')
     rect = text.get_rect()
     rect.center = (surf.get_width()//2, surf.get_height()-rect.height)
     surf.blit(text, rect)
 
-    # upper text
+    # upper left text
+    # seconds since start
     text = FONTs[24].render(ctrl.render_time(), True, 'white')
     rect = text.get_rect()
     surf.blit(text, rect)
@@ -133,6 +142,12 @@ def handle_key_k():
     return
 
 
+def handle_quit_intention(evt):
+    '''Hand quit intention'''
+    if evt in [pg.K_q, pg.K_ESCAPE]:
+        pg.quit()
+
+
 def check_events():
     for evt in pg.event.get():
         if evt.type == pg.QUIT:
@@ -147,12 +162,13 @@ def check_events():
         elif evt.type in [pg.KEYDOWN, ]:
             ctrl.key = evt.unicode
 
-            if ctrl.key == 'k':
+            if evt.key == pg.K_k:
                 handle_key_k()
+
+            handle_quit_intention(evt.key)
 
         else:
             pass
-            # print(evt)
 
     return
 
